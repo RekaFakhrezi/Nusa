@@ -84,3 +84,25 @@
         {{ $slot }}
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var scrollpos = sessionStorage.getItem('scrollpos_' + window.location.pathname);
+        if (scrollpos) {
+            window.scrollTo(0, scrollpos);
+            sessionStorage.removeItem('scrollpos_' + window.location.pathname);
+        }
+
+        // Clear scroll position for sidebar links to allow fresh navigation
+        document.querySelectorAll('aside a').forEach(link => {
+            link.addEventListener('click', () => {
+                const url = new URL(link.href, window.location.origin);
+                sessionStorage.removeItem('scrollpos_' + url.pathname);
+            });
+        });
+    });
+
+    window.addEventListener('beforeunload', function(e) {
+        sessionStorage.setItem('scrollpos_' + window.location.pathname, window.scrollY);
+    });
+</script>
