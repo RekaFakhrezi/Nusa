@@ -1,16 +1,6 @@
 <?php
 
-// Pastikan folder storage sementara ada di Vercel
-$storagePath = '/tmp/storage';
-if (!is_dir($storagePath)) {
-    @mkdir($storagePath, 0777, true);
-    @mkdir($storagePath . '/framework/views', 0777, true);
-    @mkdir($storagePath . '/framework/cache', 0777, true);
-    @mkdir($storagePath . '/framework/sessions', 0777, true);
-}
-
-// Paksa Laravel menggunakan folder /tmp
-putenv("VIEW_COMPILED_PATH=$storagePath/framework/views");
-$_ENV['VIEW_COMPILED_PATH'] = "$storagePath/framework/views";
+// Set VERCEL env jika belum ada (untuk deteksi di bootstrap/app.php)
+$_ENV['VERCEL'] = '1';
 
 require __DIR__ . '/../public/index.php';
