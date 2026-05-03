@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "framework": "laravel",
+    "framework": "null",
     "buildCommand": "composer install --no-dev && npm run build",
     "outputDirectory": "public",
     "functions": {
