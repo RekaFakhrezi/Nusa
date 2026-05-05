@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage;
 
 class Article extends Model
 {
@@ -52,9 +54,32 @@ class Article extends Model
         return $this->likes()->count();
     }
 
+    /**
+     * Get the article's image URL.
+     */
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (!$value) {
+                    return null;
+                }
+                
+                // Jika value sudah berupa full URL (misal dari seeding/faker), langsung return
+                if (filter_var($value, FILTER_VALIDATE_URL)) {
+                    return $value;
+                }
+
+                // Ubah relative path menjadi full URL menggunakan Storage S3
+                return Storage::disk('s3')->url($value);
+            }
+        );
+    }
+
     public function isLikedBy($user)
     {
-        if (!$user) return false;
+        if (!$user)
+            return false;
         return $this->likes()->where('user_id', $user->id)->exists();
     }
 }
