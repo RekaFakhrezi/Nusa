@@ -70,8 +70,8 @@ class Article extends Model
                     return $value;
                 }
 
-                // Ubah relative path menjadi full URL menggunakan Storage S3
-                return Storage::disk('s3')->url($value);
+                // Ubah relative path menjadi full URL menggunakan Storage default
+                return Storage::url($value);
             }
         );
     }

@@ -41,14 +41,14 @@ class ArticleController extends Controller
                 }
 
                 $fileName = 'articles/' . uniqid() . '_' . time() . '.png';
-                Storage::disk('public')->put($fileName, $imageData);
+                Storage::put($fileName, $imageData);
                 $imagePath = $fileName;
             } catch (\Exception $e) {
                 Log::error('Image crop error: ' . $e->getMessage());
             }
         }
         elseif ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('articles', 'public');
+            $imagePath = $request->file('image')->store('articles');
         }
 
         Article::create([
@@ -242,7 +242,7 @@ class ArticleController extends Controller
                 }
 
                 $fileName = 'articles/' . uniqid() . '_' . time() . '.png';
-                Storage::disk('public')->put($fileName, $imageData);
+                Storage::put($fileName, $imageData);
                 $article->image = $fileName;
             } catch (\Exception $e) {
                 Log::error('Image crop error: ' . $e->getMessage());
@@ -321,7 +321,7 @@ class ArticleController extends Controller
         $articles = Article::whereIn('id', $request->ids)->get();
         foreach($articles as $article) {
             if ($article->image) {
-                Storage::disk('public')->delete($article->image);
+                Storage::delete($article->image);
             }
             $article->delete();
         }
